@@ -9,7 +9,8 @@ double _cardSeparatorHeight = 10;
 
 class SchedulerSetup {
   /// for max horizontal span
-  final int maxBlockCount;
+  final int maxHourCount;
+  final int startHour;
 
   /// for max vertical span
   final List<DataPoint> dataPoints;
@@ -17,23 +18,19 @@ class SchedulerSetup {
   final Size blockSize;
 
   const SchedulerSetup({
-    required this.maxBlockCount,
+    required this.startHour,
+    required this.maxHourCount,
     required this.dataPoints,
     required this.blockSize,
   });
 }
 
-class SchedulerDimensions extends InheritedWidget {
+class SchedulerData extends InheritedWidget {
   final SchedulerSetup setup;
 
   final BoxConstraints constraints;
 
-  const SchedulerDimensions({
-    required this.setup,
-    required this.constraints,
-    super.key,
-      required super.child}
-  });
+  const SchedulerData({required this.setup, required this.constraints, super.key, required super.child});
 
   double get leftPanelWidth => constraints.maxWidth * _leftSideBarRatio;
 
@@ -47,25 +44,25 @@ class SchedulerDimensions extends InheritedWidget {
 
   double get innerHeight => constraints.maxHeight - (topPanelHeight + bottomPanelHeight);
 
-  double get swimlaneAbsoluteMaxWidth => setup.maxBlockCount * setup.blockSize.width;
+  double get swimlaneAbsoluteMaxWidth => setup.maxHourCount * setup.blockSize.width;
 
   double get swimlaneAbsoluteMaxHeight => setup.dataPoints.length * setup.blockSize.height;
 
   Size get blockSize => setup.blockSize;
 
-  static SchedulerDimensions? _maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SchedulerDimensions>();
+  static SchedulerData? _maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SchedulerData>();
   }
 
-  static SchedulerDimensions of(BuildContext context) {
-    final SchedulerDimensions? result = _maybeOf(context);
+  static SchedulerData of(BuildContext context) {
+    final SchedulerData? result = _maybeOf(context);
     assert(result != null, 'No Dimensions found in context');
     return result!;
   }
 
   @override
-  bool updateShouldNotify(covariant SchedulerDimensions oldWidget) {
-    return oldWidget.blockSize.height != this.blockSize.height && oldWidget.blockSize.width != this.blockSize.width;
+  bool updateShouldNotify(covariant SchedulerData oldWidget) {
+    return oldWidget.blockSize.height != blockSize.height && oldWidget.blockSize.width != blockSize.width;
   }
 
   double get preferredInnerHeight => (innerHeight / blockSize.height).floor() * blockSize.height;
