@@ -65,7 +65,7 @@ class InstructorWidget extends StatelessWidget {
             child: Center(
               child: Text(
                 dataPoint.label,
-                style: Theme.of(context).textTheme.bodyText2,
+                style: TextStyle(color: WidgetColors.Primary),
               ),
             ),
           ),

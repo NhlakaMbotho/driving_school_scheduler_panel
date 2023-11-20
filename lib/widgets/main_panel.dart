@@ -30,7 +30,9 @@ class _MainPanelState extends State<MainPanel> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      Provider.of<ScrollEventBus>(context).syncController(widget.horizontalController, Axis.horizontal);
+      Provider.of<ScrollEventBus>(
+        context,
+      ).syncController(widget.horizontalController, Axis.horizontal);
     });
     super.initState();
   }

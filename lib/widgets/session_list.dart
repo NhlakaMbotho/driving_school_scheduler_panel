@@ -17,6 +17,7 @@ class InstructorSessionLine extends StatelessWidget {
 
     if (instructor.cardList.length == 0) {
       return [
+        //TODO: revisit this
         Container(
           color: Colors.transparent,
           width: dimensions.blockSize.width,
@@ -24,34 +25,27 @@ class InstructorSessionLine extends StatelessWidget {
       ];
     }
 
-    int i = 0;
-    do {
-      int currentHour = getHourByIndex(i, tradingStartHour);
+    for (int i = 0; i < instructor.cardList.length; i++) {
+      SchedulerCard currentLesson = instructor.cardList[i];
 
-      try {
-        SchedulerCard _lesson = instructor.cardList.firstWhere((lesson) => lesson.startTime.hour == currentHour);
-        if (_lesson.startTime.hour == _lesson.endTime.hour) {
-          i++;
-          continue;
-        }
-        int hourCount = _lesson.endTime.hour - _lesson.startTime.hour;
-        double currentLessonWidth = dimensions.blockSize.width * hourCount;
-        list.add(LessonWidget(_lesson, currentLessonWidth, dimensions.blockSize.height));
-        i += hourCount;
-      } on StateError {
-        int k = i;
-        double width = 0;
-        while (instructor.cardList.any((lesson) => lesson.startTime.hour == getHourByIndex(k, tradingStartHour)) &&
-            k < tradingHours) {
-          width += dimensions.blockSize.width;
-          k++;
-        }
-        if (k > i) {
-          list.add(SizedBox(width: width));
-        }
-        i = k;
+      if (i == 0 && currentLesson.startTime.hour > tradingStartHour) {
+        list.add(SizedBox(width: (currentLesson.startTime.hour - tradingStartHour) * dimensions.blockSize.width));
+        continue;
       }
-    } while (i < tradingHours);
+
+      if (i > 0 && instructor.cardList[i - 1].endTime.hour < currentLesson.startTime.hour) {
+        list.add(SizedBox(
+            width:
+                (currentLesson.startTime.hour - instructor.cardList[i - 1].endTime.hour) * dimensions.blockSize.width));
+      }
+
+      list.add(
+        LessonWidget(
+            currentLesson,
+            (currentLesson.endTime.hour - currentLesson.startTime.hour) * dimensions.blockSize.width,
+            dimensions.blockSize.height),
+      );
+    }
 
     return list;
   }

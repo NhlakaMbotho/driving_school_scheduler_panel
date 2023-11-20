@@ -9,17 +9,17 @@ import 'package:provider/provider.dart';
 class SchedulerWidget extends StatelessWidget {
   final SchedulerSetup _setup;
 
-  const SchedulerWidget(SchedulerSetup setup, {super.key}) : _setup = setup;
+  const SchedulerWidget({required SchedulerSetup setup, super.key}) : _setup = setup;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SchedulerData(
-          constraints: constraints,
-          setup: _setup,
-          child: Provider(
-            create: (context) => ScrollEventBus(),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => ScrollEventBus())],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SchedulerData(
+            constraints: constraints,
+            setup: _setup,
             child: Container(
               width: constraints.maxWidth,
               height: constraints.maxHeight,
@@ -30,14 +30,14 @@ class SchedulerWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Header(),
-                  MiddlePanel()
+                  const MiddlePanel()
                   // Footer()
                 ],
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -54,8 +54,10 @@ class MiddlePanel extends StatelessWidget {
       child: Row(
         children: [
           LeftAvatarWrapper(),
-          MainPanel(
-            blockWidth: data.blockSize.width,
+          Center(
+            child: MainPanel(
+              blockWidth: data.blockSize.width,
+            ),
           ),
           // RightScrollBar(),
         ],

@@ -49,6 +49,8 @@ class SchedulerTimeStamp extends StatelessWidget {
 class Header extends StatelessWidget {
   final ScrollController controller = ScrollController();
 
+  Header({super.key});
+
   @override
   Widget build(BuildContext context) {
     var dimensions = SchedulerData.of(context);

@@ -65,7 +65,10 @@ class SchedulerData extends InheritedWidget {
     return oldWidget.blockSize.height != blockSize.height && oldWidget.blockSize.width != blockSize.width;
   }
 
-  double get preferredInnerHeight => (innerHeight / blockSize.height).floor() * blockSize.height;
+  double get preferredInnerHeight {
+    double _preferredHeight = ((innerHeight / blockSize.height).floor() * blockSize.height);
+    return _preferredHeight + (cardSeparatorHeight * ((_preferredHeight / blockSize.height) - 1));
+  }
 
   double get preferredInnerWidth => (innerWidth / blockSize.width).floor() * blockSize.width;
 
